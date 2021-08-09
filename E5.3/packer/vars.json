@@ -1,0 +1,16 @@
+{
+  "domain_name": "ДОМЕН",
+  "tenant_id": "ПРОЕКТ_ID",
+  "username": "ИМЯ_ПОЛЬЗОВАТЕЛЯ",
+  "password": "Пароль",
+  "networks": "ID_СЕТИ",
+  "region": "РЕГИОН",
+  "availability_zone": "АЗ",
+  "volume_type": "fast.АЗ",
+
+  "vcpu_count": "1",
+  "mem_size" : "2048",
+  "hdd_size":"5",
+  "os_image": "CentOS 7 Minimal 64-bit",
+  "image_name":"devops_certification-{{timestamp}}"
+}
