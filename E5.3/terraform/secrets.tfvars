@@ -1,4 +1,4 @@
-domain_name = "DOMAIN_NAME"
+domain_name = "82113"
 project_id = "PROJECT_ID"
 user_name = "USER_NAME"
 user_password = "USER_PASSWORD"
