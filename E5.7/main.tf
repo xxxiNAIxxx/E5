@@ -18,9 +18,9 @@ resource "random_string" "random_name_1" {
 }
 
 resource "openstack_compute_flavor_v2" "flavor-node" {
-  name      = var.instance_name
-  ram       =  var.mem_size
-  vcpus     = var.vcpu_count
+  name      = "node.${var.project_id}-${random_string.random_name_1.result}"
+  ram       = "1024"
+  vcpus     = "1"
   disk      = "0"
   is_public = "false"
 }
@@ -30,7 +30,7 @@ resource "openstack_compute_flavor_v2" "flavor-node" {
 ###################################
 data "openstack_images_image_v2" "ubuntu" {
   most_recent = true
-  name        = var.OS_image
+  name        = "Ubuntu 18.04 LTS 64-bit"
 }
 ###################################
 # Create SSH-key
@@ -38,7 +38,7 @@ data "openstack_images_image_v2" "ubuntu" {
 resource "openstack_compute_keypair_v2" "terraform_key" {
   name       = "terraform_key-${random_string.random_name_1.result}"
   region     = var.region
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = var.public_key
 }
 
 ###################################
@@ -100,7 +100,7 @@ resource "openstack_blockstorage_volume_v3" "volume_1" {
 # Create Server
 ###################################
 resource "openstack_compute_instance_v2" "instance_1" {
-  name              = var.instance_name
+  name              = "node"
   flavor_id         = openstack_compute_flavor_v2.flavor-node.id
   key_pair          = openstack_compute_keypair_v2.terraform_key.id
   availability_zone = var.az_zone
