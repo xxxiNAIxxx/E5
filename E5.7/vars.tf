@@ -21,3 +21,6 @@ variable "OS_image" {
 variable "instance_name" {
   default ="ds0"
 }
+variable "instance_count" {
+  default = "2"
+}

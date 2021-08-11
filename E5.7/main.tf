@@ -82,6 +82,7 @@ module "server_remote_root_disk_1" {
   mem_size = var.mem_size
   OS_image=var.OS_image
   instance_name = var.instance_name
+  instance_count = var.instance_count
 
   image_id = 699c167a-6ea4-4847-a526-5f315bd2d424
   volume_type = var.volume_type
