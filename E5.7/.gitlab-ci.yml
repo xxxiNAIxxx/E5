@@ -1,0 +1,28 @@
+variables:
+  GIT_STRATEGY: clone
+
+stages:
+  - test
+  - deploy
+
+test_job:
+  stage: test
+  tags:
+    - runner
+  script:
+    - hostname
+    - packer validate -syntax-only -var-file=$CI_PROJECT_DIR/packer/vars.json $CI_PROJECT_DIR/packer/packer.json
+    - terraform init $CI_PROJECT_DIR/terraform/
+    - terraform validate $CI_PROJECT_DIR/terraform/
+  only:
+    - merge_requests
+
+deploy_job
+  stage: deploy
+  tags:
+    - runner 
+  script:
+  - terraform init $CI_PROJECT_DIR/terraform/
+  - terraform validate $CI_PROJECT_DIR/terraform/
+  - terraform apply -auto-approve -var-file=./secrets.tfvars 
+  when: manual
