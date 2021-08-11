@@ -14,8 +14,13 @@ variable "OS_image" {
   default ="CentOS 7 Minimal 64-bit"
 }
 variable "instance_name" {
-  default ="ds01.s015382"
+  default ="ds0"
 }
+
+variable "instance_count" {
+  default ="1"
+}
+
 
 variable "image_id" {}
 variable "volume_type" {}

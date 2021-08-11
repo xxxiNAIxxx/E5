@@ -1,3 +1,3 @@
-#output "server_external_ip" {
-#  value = openstack_networking_floatingip_v2.floatingip_1.address
-Y
+output "server_internal_ips" {
+  value = openstack_compute_instance_v2.instance_1.*.access_ip_v4
+}
