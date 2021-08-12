@@ -19,7 +19,7 @@ resource "random_string" "random_name_1" {
 
 resource "openstack_compute_flavor_v2" "flavor-node" {
   name      = var.instance_name
-  ram       =  var.mem_size
+  ram       = var.mem_size
   vcpus     = var.vcpu_count
   disk      = "0"
   is_public = "false"
@@ -70,8 +70,57 @@ resource "openstack_networking_subnet_v2" "subnet_1" {
 }
 
 ###################################
+# Create port
+###################################
+resource "openstack_networking_port_v2" "port_1" {
+  name       = "node-eth0"
+  network_id = openstack_networking_network_v2.network_1.id
+
+  fixed_ip {
+    subnet_id = openstack_networking_subnet_v2.subnet_1.id
+  }
+}
+
+###################################
+# Create Volume/Disk
+###################################
+resource "openstack_blockstorage_volume_v3" "volume_1" {
+  name                 = "volume-for-node"
+  size                 = var.hdd_size
+  image_id             = data.openstack_images_image_v2.ubuntu.id
+  volume_type          = var.volume_type
+  availability_zone    = var.az_zone
+  enable_online_resize = true
+
+  lifecycle {
+    ignore_changes = [image_id]
+  }
+}
+###################################
 # Create Server
 ###################################
+resource "openstack_compute_instance_v2" "instance_1" {
+  name              = var.instance_name
+  flavor_id         = openstack_compute_flavor_v2.flavor-node.id
+  key_pair          = openstack_compute_keypair_v2.terraform_key.id
+  availability_zone = var.az_zone
+
+  network {
+    port = openstack_networking_port_v2.port_1.id
+  }
+
+  block_device {
+    uuid             = openstack_blockstorage_volume_v3.volume_1.id
+    source_type      = "volume"
+    destination_type = "volume"
+    boot_index       = 0
+  }
+
+  vendor_options {
+    ignore_resize_confirmation = true
+  }
+}
+
 module "server_remote_root_disk_1" {
   source = "./server"
 
@@ -81,10 +130,9 @@ module "server_remote_root_disk_1" {
   vcpu_count= var.vcpu_count
   mem_size = var.mem_size
   OS_image=var.OS_image
-  instance_name = var.instance_name
   instance_count = var.instance_count
 
-  image_id = 699c167a-6ea4-4847-a526-5f315bd2d424
+  image_id = "ID"
   volume_type = var.volume_type
   az_zone = var.az_zone
   flavor_id = openstack_compute_flavor_v2.flavor-node.id
@@ -94,14 +142,14 @@ module "server_remote_root_disk_1" {
 ###################################
 # Create floating IP
 ###################################
-# resource "openstack_networking_floatingip_v2" "floatingip_1" {
-#   pool = "external-network"
-# }
+resource "openstack_networking_floatingip_v2" "floatingip_1" {
+  pool = "external-network"
+}
 
 ###################################
 # Link floating IP to internal IP
 ###################################
-# resource "openstack_networking_floatingip_associate_v2" "association_1" {
-#   port_id     = openstack_networking_port_v2.port_1.id
-#   floating_ip = openstack_networking_floatingip_v2.floatingip_1.address
-# }
+resource "openstack_networking_floatingip_associate_v2" "association_1" {
+  port_id     = openstack_networking_port_v2.port_1.id
+  floating_ip = openstack_networking_floatingip_v2.floatingip_1.address
+}

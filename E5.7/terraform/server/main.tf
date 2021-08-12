@@ -16,7 +16,7 @@ resource "openstack_networking_port_v2" "port_1" {
 # Create Volume/Disk
 ###################################
 resource "openstack_blockstorage_volume_v3" "volume_1" {
-  name                 = "volume-for-node-${count.index+1}"
+  name                 = "volume-for-node-${count.index+2}"
   count = var.instance_count
 
   size                 = var.hdd_size
@@ -34,7 +34,7 @@ resource "openstack_blockstorage_volume_v3" "volume_1" {
 ###################################
 resource "openstack_compute_instance_v2" "instance_1" {
   count = var.instance_count
-  name              = "ds0${count.index+1}.s015382"
+  name              = "ds0${count.index+2}.something"
   flavor_id         = var.flavor_id
   key_pair          = var.key_pair_id
   availability_zone = var.az_zone

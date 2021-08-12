@@ -1,0 +1,60 @@
+{
+  "variables": {
+    "region": null,
+    "tenant_id": null,
+    "domain_name": null,
+    "username": null,
+    "password": null,
+    "networks": null,
+    "availability_zone": null,
+    "volume_type": null,
+    "volume_size": "5"
+  },
+  "sensitive-variables": [
+    "password"
+  ],
+  "builders": [
+    {
+      "name": "app",
+      "type": "openstack",
+      "identity_endpoint": "https://api.selvpc.ru/identity/v3",
+      "region": "{{user `region`}}",
+      "tenant_id": "{{user `tenant_id`}}",
+      "domain_name": "{{user `domain_name`}}",
+      "username": "{{user `username`}}",
+      "password": "{{user `password`}}",
+      "networks": "{{user `networks`}}",
+      "availability_zone": "{{user `availability_zone`}}",
+      "volume_type": "{{user `volume_type`}}",
+      "volume_size": "{{user `hdd_size`}}",
+      "floating_ip_network": "external-network",
+
+      "flavor": "SL1.2-4096",
+      "ssh_username": "root",
+      "image_name": "{{user `image_name`}}",
+      "source_image_name": "{{user `os_image`}}",
+      "use_floating_ip": true,
+      "use_blockstorage_volume": true,
+      "image_visibility": "private",
+      "image_tags": [
+        "app"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+        "type": "shell",
+        "script": "files/1_configure_centos7.sh",
+        "only": [
+          "app"
+        ]
+      },
+      {
+        "type": "shell",
+        "script": "files/2_install_GL_runner.sh",
+        "only": [
+          "app"
+        ]
+      }
+  ]
+}

@@ -19,5 +19,5 @@ variable "OS_image" {
   default ="CentOS 7 Minimal 64-bit"
 }
 variable "instance_name" {
-  default ="ds01.s015382"
+  default ="NAME"
 }

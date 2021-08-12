@@ -10,19 +10,21 @@ test_job:
   tags:
     - runner
   script:
-    - hostname
     - packer validate -syntax-only -var-file=$CI_PROJECT_DIR/packer/vars.json $CI_PROJECT_DIR/packer/packer.json
     - terraform init $CI_PROJECT_DIR/terraform/
     - terraform validate $CI_PROJECT_DIR/terraform/
   only:
     - merge_requests
 
-deploy_job
+deploy_job:
   stage: deploy
   tags:
-    - runner 
+    - runner
   script:
-  - terraform init $CI_PROJECT_DIR/terraform/
-  - terraform validate $CI_PROJECT_DIR/terraform/
-  - terraform apply -auto-approve -var-file=./secrets.tfvars 
+    - terraform init $CI_PROJECT_DIR/terraform/
+    - terraform validate $CI_PROJECT_DIR/terraform/
+    - cd $CI_PROJECT_DIR/terraform/
+    - terraform apply -auto-approve -var-file=./secrets.tfvars
+  only:
+    - merge_requests
   when: manual

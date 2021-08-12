@@ -1,0 +1,16 @@
+{
+  "domain_name": "SECRET_CODE",
+  "tenant_id": "ID",
+  "username": "login",
+  "password": "passwd",
+  "networks": "ID",
+  "region": "A0",
+  "availability_zone": "A1",
+  "volume_type": "fast.A2",
+
+  "vcpu_count": "1",
+  "mem_size" : "2048",
+  "hdd_size":"5",
+  "os_image": "CentOS 7 Minimal 64-bit",
+  "image_name":"NAME"
+}
